@@ -1,26 +1,292 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  /* ── The palette ───────────────────────────────────────────────────────────
+     Five warm tones, light to dark. Every colour on the site is one of these;
+     the paintings supply the hue. */
+  --color-linen: #f5f1ea;
+  --color-khaki: #d7c9b8;
+  --color-camel: #b2967d;
+  --color-cocoa: #7d5a44;
+  --color-espresso: #4a342a;
+
+  /* ── What each tone does ───────────────────────────────────────────────────*/
+  /* Linen carries the page. */
+  --color-canvas: var(--color-linen);
+  /* Khaki gives inset sections real weight, and grounds every image frame. */
+  --color-band: var(--color-khaki);
+  --color-plate: var(--color-khaki);
+
+  /* Espresso is the ink and the dark ground; Cocoa is the secondary voice and
+     the accent — both clear 4.5:1 on Linen (10.3:1 and 5.5:1). Camel is for
+     rules and disabled states only: at 2.5:1 it must never carry text. */
+  --color-ink: var(--color-espresso);
+  --color-ink-soft: var(--color-cocoa);
+  --color-muted: var(--color-cocoa);
+  --color-accent: var(--color-cocoa);
+
+  --color-line: var(--color-khaki);
+  --color-line-soft: var(--color-camel);
+
+  --font-display: var(--font-bodoni), Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-jost), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, "SFMono-Regular", monospace;
+
+  --ease-silk: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  body {
+    background: var(--color-linen);
+    color: var(--color-espresso);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background: var(--color-camel);
+    color: var(--color-linen);
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  input,
+  textarea,
+  select,
+  button {
+    font-family: inherit;
+    color: inherit;
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: var(--color-camel);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-cocoa);
+    outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  /* Page gutter, shared by every section so edges line up across routes. */
+  .shell {
+    width: 100%;
+    max-width: 1680px;
+    margin-inline: auto;
+    padding-inline: clamp(20px, 4vw, 64px);
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+  }
+
+  .micro {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+  }
+
+  /* An inset section on Khaki. Cocoa only reaches 3.8:1 there, so secondary
+     text and accents step up to Espresso inside one — set as variables so
+     every `text-muted` / `text-accent` below adjusts without a single override
+     at the call site. */
+  .band {
+    background: var(--color-khaki);
+    --color-muted: var(--color-espresso);
+    --color-ink-soft: var(--color-espresso);
+    --color-accent: var(--color-espresso);
+    --color-line: var(--color-camel);
+    --color-plate: var(--color-linen);
+  }
+
+  /* ── Painting surface ──────────────────────────────────────────────────────
+     Canvas weave and a soft raking light, over the work's own pigment. */
+  .painting {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .painting::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0.42;
+    mix-blend-mode: soft-light;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='c'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7 0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23c)'/%3E%3C/svg%3E");
+  }
+
+  .painting::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    box-shadow:
+      inset 0 1px 0 rgba(245, 241, 234, 0.12),
+      inset 0 -36px 64px -40px rgba(74, 52, 42, 0.44);
+  }
+
+  /* How a canvas hangs: a hairline, nothing more. */
+  .frame {
+    border: 1px solid rgba(74, 52, 42, 0.12);
+  }
+
+  /* ── Buttons ───────────────────────────────────────────────────────────────
+     Three weights, nothing else. */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    padding: 16px 30px;
+    border: 1px solid transparent;
+    font-size: 11px;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition:
+      background-color 0.45s ease,
+      border-color 0.45s ease,
+      color 0.45s ease,
+      gap 0.45s ease;
+  }
+
+  .btn-primary {
+    background: var(--color-espresso);
+    border-color: var(--color-espresso);
+    color: var(--color-linen);
+  }
+
+  .btn-primary:hover {
+    background: var(--color-cocoa);
+    border-color: var(--color-cocoa);
+    gap: 22px;
+  }
+
+  .btn-outline {
+    background: transparent;
+    border-color: var(--color-espresso);
+    color: var(--color-espresso);
+  }
+
+  .btn-outline:hover {
+    background: var(--color-espresso);
+    color: var(--color-linen);
+    gap: 22px;
+  }
+
+  .btn-quiet {
+    background: transparent;
+    border-color: var(--color-camel);
+    color: var(--color-cocoa);
+  }
+
+  .btn-quiet:hover {
+    border-color: var(--color-cocoa);
+    background: var(--color-khaki);
+  }
+
+  .btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+
+  .link-underline {
+    border-bottom: 1px solid var(--color-camel);
+    padding-bottom: 2px;
+    transition:
+      border-color 0.4s ease,
+      color 0.4s ease;
+  }
+
+  .link-underline:hover {
+    color: var(--color-cocoa);
+    border-color: var(--color-cocoa);
+  }
+
+  /* ── Forms ─────────────────────────────────────────────────────────────────*/
+  .field {
+    background: none;
+    border: 0;
+    border-bottom: 1px solid var(--color-camel);
+    padding: 10px 0;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.4s ease;
+  }
+
+  .field:focus {
+    border-color: var(--color-cocoa);
+    outline: none;
+  }
+
+  .field-box {
+    background: none;
+    border: 1px solid var(--color-camel);
+    padding: 14px;
+    font-size: 14px;
+    line-height: 1.7;
+    outline: none;
+    resize: vertical;
+    transition: border-color 0.4s ease;
+  }
+
+  .field-box:focus {
+    border-color: var(--color-cocoa);
+  }
+
+  /* ── Loading ───────────────────────────────────────────────────────────────*/
+  .skeleton {
+    position: relative;
+    overflow: hidden;
+    background: var(--color-khaki);
+  }
+
+  .skeleton::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--color-camel);
+    opacity: 0;
+    animation: breathe 2.2s var(--ease-silk) infinite;
+  }
+
+  @keyframes breathe {
+    0%,
+    100% {
+      opacity: 0;
+    }
+    50% {
+      opacity: 0.55;
+    }
+  }
 }

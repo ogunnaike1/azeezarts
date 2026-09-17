@@ -1,36 +1,110 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Azeezarts — artist portfolio & shop
 
-## Getting Started
-
-First, run the development server:
+Next.js 15 (App Router) · TypeScript · Tailwind v4 · Framer Motion.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run dev     # http://localhost:3000
+npm run build   # production build
+npm start       # serve the build
+npm run lint
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Routes
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Route           | Rendering | What it is                                            |
+| --------------- | --------- | ----------------------------------------------------- |
+| `/`             | Static    | Hero carousel, selected works, studio, collector quotes |
+| `/works`        | Static    | Full catalogue with subject + series filters           |
+| `/works/[slug]` | SSG       | One page per artwork, prerendered from the data file   |
+| `/shop`         | Static    | Availability filter, sorting, add-to-bag               |
+| `/about`        | Static    | Biography, studio shots, exhibition timeline           |
+| `/commissions`  | Static    | Four-stage process, pricing, request form              |
+| `/contact`      | Static    | Studio details and enquiry form                        |
+| `/api/enquiry`  | Dynamic   | Intake endpoint for every form on the site             |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Where to edit things
 
-## Learn More
+- **Artworks** — `src/lib/artworks.ts`. One array drives the catalogue, the shop,
+  the featured row, related works and the prerendered detail pages. Add an entry
+  and every surface picks it up.
+- **Copy, nav, exhibitions, commission tiers** — `src/lib/site.ts`. The brand
+  fields live at the top: `name` (the wordmark), `artist` (how the painter is
+  referred to in running copy), `email`.
+- **Logo** — `src/components/Logo.tsx` draws the mark inline and `public/logo.svg`
+  holds a standalone copy. **Both are interim placeholders.** Replace them with
+  the real AZ monogram exported as a single path, and keep `stroke`/`fill` set to
+  `currentColor` — that is what lets the mark invert to cream over the dark hero
+  without a second asset. `src/app/icon.svg` (the favicon) needs the same swap,
+  but with literal colours, since favicons cannot inherit.
+- **Design tokens** (palette, fonts, easing) — the `@theme` block at the top of
+  `src/app/globals.css`. Colours are exposed as Tailwind utilities:
+  `bg-canvas`, `text-ink`, `text-ember`, `border-line`, and so on.
 
-To learn more about Next.js, take a look at the following resources:
+### Colour system
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Five warm tones, light to dark. Nothing else ships — the stylesheet contains
+exactly these five hex values, and the paintings supply the hue.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Tone | Hex | Job |
+| --- | --- | --- |
+| Linen | `#f5f1ea` | The page ground, every route |
+| Khaki | `#d7c9b8` | Inset `.band` sections, image grounds, mobile menu, footer text |
+| Camel | `#b2967d` | Hairlines, field underlines, disabled edges — **never text** (2.5:1) |
+| Cocoa | `#7d5a44` | Secondary copy, meta, accent, button hover, focus ring |
+| Espresso | `#4a342a` | Headings, body, primary buttons, the footer ground, the hero scrim |
 
-## Deploy on Vercel
+The range runs Linen → Khaki → Espresso, so sections separate by weight rather
+than by a second colour.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+**Contrast.** Camel is the trap: it reads as a usable brown but only reaches
+2.5:1 on Linen and 4.2:1 on Espresso, so it is restricted to rules. Cocoa is the
+other trap: 5.5:1 on Linen but only 3.8:1 on Khaki. Rather than override colours
+per element inside a Khaki band, `.band` re-points the semantic tokens:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```css
+.band {
+  background: var(--color-khaki);
+  --color-muted: var(--color-espresso);   /* Cocoa is 3.8:1 here */
+  --color-accent: var(--color-espresso);
+  --color-line: var(--color-camel);
+  --color-plate: var(--color-linen);
+}
+```
+
+Every `text-muted` / `text-accent` inside adjusts automatically. All eight text
+pairings on the site clear AA; the audit lives in the build notes.
+
+### Paintings, not swatches
+
+Each artwork carries a single `tone` — a real pigment (burnt sienna, indigo,
+Payne’s grey, terre verte) — rendered by `Plate` as a lit, canvas-woven field
+behind a hairline. Photography placeholders (studio shots, social grid, portrait)
+stay neutral: only the artwork is allowed strong colour.
+
+## Two things to wire up before launch
+
+**1. Real photography.** Every artwork currently renders as a painterly CSS
+gradient through `src/components/Plate.tsx`. That component is the single swap
+point: add an `image` field to the `Artwork` type and render `next/image` inside
+`Plate` when it is present — no page or card needs to change.
+
+**2. Enquiry delivery.** `src/app/api/enquiry/route.ts` validates every
+submission and logs it. The marked line is where to call Resend, Postmark,
+SendGrid or a Sheets webhook so enquiries actually reach an inbox. Contact,
+commission, newsletter and bag checkout all post through it.
+
+## The bag
+
+Paintings are one-of-one, so the bag holds each work at most once and has no
+quantities (`src/context/CartContext.tsx`). It persists to `localStorage` and
+degrades quietly when storage is blocked. Checkout is an enquiry, not a payment:
+it posts the selection to `/api/enquiry` so the artist can invoice and quote
+crating. To take payment instead, swap the drawer's submit handler for a Stripe
+Checkout session.
+
+## Accessibility & motion
+
+`prefers-reduced-motion` is honoured globally in `globals.css` and per-component
+via Framer's `useReducedMotion` — the hero and quote rotators stop advancing
+rather than just animating faster. Entrance animations have a `<noscript>`
+fallback so content stays readable without JavaScript.

@@ -1,103 +1,150 @@
-import Image from "next/image";
+import Link from "next/link";
+import { Hero } from "@/components/Hero";
+import { Reveal } from "@/components/Reveal";
+import { ArtworkCard } from "@/components/ArtworkCard";
+import { QuoteRotator } from "@/components/QuoteRotator";
+import { getFeatured } from "@/lib/artworks";
+import { PhotoSlot } from "@/components/PhotoSlot";
+import { socialGrid, studioPortrait, studioStats } from "@/lib/site";
 
-export default function Home() {
+export default function HomePage() {
+  const featured = getFeatured();
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <>
+      <Hero />
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+      {/* Statement */}
+      <section className="shell pt-[clamp(80px,11vw,160px)]">
+        <Reveal className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] items-end gap-[clamp(30px,5vw,80px)]">
+          <p className="m-0 max-w-[16em] font-display text-[clamp(26px,3.1vw,44px)] leading-[1.24] tracking-[-0.01em]">
+            Painting the spaces between memory and emotion — in oil, pigment and
+            quiet light.
+          </p>
+          <div className="flex max-w-[34em] flex-col gap-4">
+            <span className="eyebrow text-accent">Studio note</span>
+            <p className="m-0 text-[15px] font-light leading-[1.85] text-ink-soft">
+              Each canvas begins as a fragment — a half-remembered room, a
+              gesture, the weight of afternoon. I work slowly, in layers, until
+              the surface holds something that cannot quite be named.
+            </p>
+          </div>
+        </Reveal>
+      </section>
+
+      {/* Selected works */}
+      <section className="shell py-[clamp(70px,9vw,130px)]">
+        <div className="mb-[clamp(36px,5vw,64px)] flex flex-wrap items-baseline justify-between gap-5 border-b border-line pb-5">
+          <h2 className="m-0 font-display text-[clamp(28px,3.6vw,54px)] tracking-[-0.01em]">
+            Selected works
+          </h2>
+          <span className="font-mono text-[9.5px] uppercase tracking-[0.3em] text-muted">
+            2023 — 2026 · Oil &amp; mixed media
+          </span>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(260px,1fr))] items-start gap-[clamp(24px,3.2vw,54px)]">
+          {featured.map((artwork, i) => (
+            <Reveal key={artwork.slug} delay={i * 0.08}>
+              {/* Staggered baselines give the grid a hung-salon rhythm. */}
+              <ArtworkCard
+                artwork={artwork}
+                className={i % 2 === 1 ? "lg:mt-14" : ""}
+              />
+            </Reveal>
+          ))}
+        </div>
+
+        <div className="mt-[clamp(50px,6vw,90px)] flex justify-center">
+          <Link
+            href="/works"
+            className="btn btn-outline group"
+          >
+            View all works
+            <span className="font-mono transition-transform duration-500 group-hover:translate-x-1.5">
+              →
+            </span>
+          </Link>
+        </div>
+      </section>
+
+      {/* Studio */}
+      <section className="overflow-hidden band py-[clamp(70px,9vw,140px)]">
+        <div className="shell grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] items-center gap-[clamp(30px,5vw,90px)]">
+          <Reveal>
+            <PhotoSlot
+              {...studioPortrait}
+              sizes="(max-width: 1000px) 100vw, 46vw"
+            />
+          </Reveal>
+
+          <Reveal delay={0.1}>
+            <span className="eyebrow text-accent">The studio</span>
+            <h2 className="mt-5 font-display text-[clamp(30px,4.2vw,62px)] leading-[1.06] tracking-[-0.015em]">
+              A slow
+              <br />
+              conversation
+              <br />
+              with the surface
+            </h2>
+            <p className="mt-6 max-w-[36em] text-[15px] font-light leading-[1.85] text-ink-soft">
+              Mornings are for mixing — earth pigments, lead white, a little cold
+              wax. The painting is turned to the wall for weeks at a time, then
+              returned to. Nothing leaves the studio until it feels inevitable.
+            </p>
+            <dl className="mt-11 grid grid-cols-[repeat(auto-fit,minmax(130px,1fr))] gap-6 border-t border-line-soft pt-7">
+              {studioStats.map((stat) => (
+                <div key={stat.label}>
+                  <dt className="sr-only">{stat.label}</dt>
+                  <dd className="m-0">
+                    <span className="block font-display text-[34px] leading-none">
+                      {stat.value}
+                    </span>
+                    <span className="mt-2 block font-mono text-[9px] uppercase tracking-[0.22em] text-muted">
+                      {stat.label}
+                    </span>
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* Collectors */}
+      <section className="shell py-[clamp(80px,10vw,150px)]">
+        <Reveal>
+          <QuoteRotator />
+        </Reveal>
+      </section>
+
+      {/* From the studio */}
+      <section className="border-t border-line py-[clamp(60px,8vw,110px)]">
+        <div className="shell">
+          <div className="mb-9 flex flex-wrap items-baseline justify-between gap-4">
+            <h2 className="m-0 font-display text-[clamp(24px,2.8vw,38px)]">
+              From the studio
+            </h2>
+            <Link
+              href="/contact"
+              className="link-underline font-mono text-[10px] uppercase tracking-[0.26em]"
+            >
+              Follow the artist →
+            </Link>
+          </div>
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(160px,1fr))] gap-2.5">
+            {socialGrid.map((shot) => (
+              <PhotoSlot
+                key={shot.label}
+                {...shot}
+                ratio="1 / 1"
+                hover
+                sizes="(max-width: 700px) 50vw, 16vw"
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+    </>
   );
 }
