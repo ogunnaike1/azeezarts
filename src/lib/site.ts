@@ -27,13 +27,18 @@ export const socials = [
 ] as const;
 
 /**
- * The hero carousel hangs real catalogue works, referenced by slug, so the
- * paintings on the front page are the paintings in the shop.
+ * The hero fan hangs real catalogue works, referenced by slug, so the
+ * paintings on the front page are the paintings in the shop. Listed left to
+ * right across the arc; the middle one sits at the crown.
  */
 export const heroSlugs = [
-  "afternoon-that-would-not-end",
-  "threshold-i",
+  "the-guest-room",
   "dry-season-field",
+  "threshold-i",
+  "afternoon-that-would-not-end",
+  "her-mothers-blue",
+  "harmattan-morning",
+  "lisbon-window-late-may",
 ] as const;
 
 export const quotes = [

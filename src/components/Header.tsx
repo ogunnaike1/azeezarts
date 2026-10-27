@@ -8,18 +8,12 @@ import { nav, socials } from "@/lib/site";
 import { Logo } from "@/components/Logo";
 import { useCart } from "@/context/CartContext";
 
-/**
- * The nav inverts to cream while it sits over the home page's dark hero, then
- * settles onto the page ground once scrolled past it.
- */
+/** Fixed nav; it sheds its transparency once the page has scrolled. */
 export function Header() {
   const pathname = usePathname();
   const { count, open } = useCart();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-
-  // Only the home page has a full-bleed dark hero for the nav to sit over.
-  const overHero = pathname === "/" && !scrolled;
 
   const { scrollYProgress } = useScroll();
   const progress = useSpring(scrollYProgress, {
@@ -57,9 +51,9 @@ export function Header() {
 
       <header
         className={`fixed inset-x-0 top-0 z-[100] border-b backdrop-blur-[14px] transition-[background-color,border-color,color] duration-700 ${
-          overHero
-            ? "border-canvas/15 bg-transparent text-canvas"
-            : "border-line bg-canvas/92 text-ink"
+          scrolled
+            ? "border-line bg-canvas/92 text-ink"
+            : "border-transparent bg-transparent text-ink"
         }`}
       >
         <div
@@ -80,13 +74,13 @@ export function Header() {
                   key={item.href}
                   href={item.href}
                   className={`relative py-[6px] text-[11.5px] uppercase tracking-[0.26em] transition-colors duration-500 ${
-                    active && !overHero ? "text-accent" : ""
-                  } ${overHero ? "hover:text-canvas" : "hover:text-accent"}`}
+                    active ? "text-accent" : ""
+                  } hover:text-accent`}
                 >
                   {item.label}
                   <span
                     className={`absolute inset-x-0 -bottom-px h-px origin-left transition-transform duration-500 ease-[cubic-bezier(.16,1,.3,1)] ${
-                      overHero ? "bg-canvas" : "bg-accent"
+                      "bg-accent"
                     } ${active ? "scale-x-100" : "scale-x-0"}`}
                   />
                 </Link>
@@ -99,9 +93,7 @@ export function Header() {
               type="button"
               onClick={open}
               aria-label={`Open bag, ${count} ${count === 1 ? "work" : "works"}`}
-              className={`flex cursor-pointer items-baseline gap-2 transition-colors duration-500 ${
-                overHero ? "hover:text-canvas" : "hover:text-accent"
-              }`}
+              className="flex cursor-pointer items-baseline gap-2 transition-colors duration-500 hover:text-accent"
             >
               <span className="text-[11px] uppercase tracking-[0.26em]">Bag</span>
               <span className="min-w-[26px] border border-current py-[2px] text-center font-mono text-[11px] opacity-80">
@@ -117,14 +109,12 @@ export function Header() {
               className="flex cursor-pointer flex-col gap-[5px] py-2 lg:hidden"
             >
               <span
-                className={`block h-px w-[22px] transition-transform duration-500 ${
-                  overHero ? "bg-canvas" : "bg-ink"
-                } ${menuOpen ? "translate-y-[3px] rotate-45" : ""}`}
+                className={`block h-px w-[22px] bg-ink transition-transform duration-500 ${
+                  menuOpen ? "translate-y-[3px] rotate-45" : ""}`}
               />
               <span
-                className={`block h-px w-[22px] transition-transform duration-500 ${
-                  overHero ? "bg-canvas" : "bg-ink"
-                } ${menuOpen ? "-translate-y-[3px] -rotate-45" : ""}`}
+                className={`block h-px w-[22px] bg-ink transition-transform duration-500 ${
+                  menuOpen ? "-translate-y-[3px] -rotate-45" : ""}`}
               />
             </button>
           </div>

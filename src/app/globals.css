@@ -36,6 +36,11 @@
 }
 
 @layer base {
+  :root {
+    /* One hero screen. The home page's curtain overlaps by exactly this. */
+    --hh: max(100vh, 700px);
+  }
+
   html {
     scroll-behavior: smooth;
   }

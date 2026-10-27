@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Hero } from "@/components/Hero";
-import { Reveal } from "@/components/Reveal";
-import { ArtworkCard } from "@/components/ArtworkCard";
+import { Parallax, ScrubIn, Thread } from "@/components/Scroll";
+import { SelectedWorks } from "@/components/SelectedWorks";
 import { QuoteRotator } from "@/components/QuoteRotator";
 import { getFeatured } from "@/lib/artworks";
 import { PhotoSlot } from "@/components/PhotoSlot";
@@ -14,71 +14,33 @@ export default function HomePage() {
     <>
       <Hero />
 
-      {/* Statement */}
-      <section className="shell pt-[clamp(80px,11vw,160px)]">
-        <Reveal className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] items-end gap-[clamp(30px,5vw,80px)]">
-          <p className="m-0 max-w-[16em] font-display text-[clamp(26px,3.1vw,44px)] leading-[1.24] tracking-[-0.01em]">
-            Painting the spaces between memory and emotion — in oil, pigment and
-            quiet light.
-          </p>
-          <div className="flex max-w-[34em] flex-col gap-4">
-            <span className="eyebrow text-accent">Studio note</span>
-            <p className="m-0 text-[15px] font-light leading-[1.85] text-ink-soft">
-              Each canvas begins as a fragment — a half-remembered room, a
-              gesture, the weight of afternoon. I work slowly, in layers, until
-              the surface holds something that cannot quite be named.
-            </p>
-          </div>
-        </Reveal>
-      </section>
-
+      {/* Everything below rises over the pinned stage like a curtain, and a
+          single thread, drawn by the scroll, runs down through all of it. */}
+      <Thread className="z-20 -mt-[calc(var(--hh)*0.25)] rounded-t-[clamp(28px,4vw,56px)] bg-canvas shadow-[0_-40px_80px_-40px_rgba(74,52,42,0.4)]">
       {/* Selected works */}
-      <section className="shell py-[clamp(70px,9vw,130px)]">
-        <div className="mb-[clamp(36px,5vw,64px)] flex flex-wrap items-baseline justify-between gap-5 border-b border-line pb-5">
-          <h2 className="m-0 font-display text-[clamp(28px,3.6vw,54px)] tracking-[-0.01em]">
-            Selected works
-          </h2>
-          <span className="font-mono text-[9.5px] uppercase tracking-[0.3em] text-muted">
-            2023 — 2026 · Oil &amp; mixed media
+      <SelectedWorks works={featured} />
+      <div className="shell flex justify-center pb-[clamp(70px,9vw,130px)] pt-[clamp(20px,3vw,40px)]">
+        <Link href="/works" className="btn btn-outline group">
+          View all works
+          <span className="font-mono transition-transform duration-500 group-hover:translate-x-1.5">
+            →
           </span>
-        </div>
-
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(260px,1fr))] items-start gap-[clamp(24px,3.2vw,54px)]">
-          {featured.map((artwork, i) => (
-            <Reveal key={artwork.slug} delay={i * 0.08}>
-              {/* Staggered baselines give the grid a hung-salon rhythm. */}
-              <ArtworkCard
-                artwork={artwork}
-                className={i % 2 === 1 ? "lg:mt-14" : ""}
-              />
-            </Reveal>
-          ))}
-        </div>
-
-        <div className="mt-[clamp(50px,6vw,90px)] flex justify-center">
-          <Link
-            href="/works"
-            className="btn btn-outline group"
-          >
-            View all works
-            <span className="font-mono transition-transform duration-500 group-hover:translate-x-1.5">
-              →
-            </span>
-          </Link>
-        </div>
-      </section>
+        </Link>
+      </div>
 
       {/* Studio */}
       <section className="overflow-hidden band py-[clamp(70px,9vw,140px)]">
         <div className="shell grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] items-center gap-[clamp(30px,5vw,90px)]">
-          <Reveal>
-            <PhotoSlot
-              {...studioPortrait}
-              sizes="(max-width: 1000px) 100vw, 46vw"
-            />
-          </Reveal>
+          <Parallax speed={0.06}>
+            <ScrubIn x={-70} y={40} clip={30} scale={0.9}>
+              <PhotoSlot
+                {...studioPortrait}
+                sizes="(max-width: 1000px) 100vw, 46vw"
+              />
+            </ScrubIn>
+          </Parallax>
 
-          <Reveal delay={0.1}>
+          <ScrubIn x={70} y={40} scale={1}>
             <span className="eyebrow text-accent">The studio</span>
             <h2 className="mt-5 font-display text-[clamp(30px,4.2vw,62px)] leading-[1.06] tracking-[-0.015em]">
               A slow
@@ -107,21 +69,21 @@ export default function HomePage() {
                 </div>
               ))}
             </dl>
-          </Reveal>
+          </ScrubIn>
         </div>
       </section>
 
       {/* Collectors */}
       <section className="shell py-[clamp(80px,10vw,150px)]">
-        <Reveal>
+        <ScrubIn y={50} scale={0.9}>
           <QuoteRotator />
-        </Reveal>
+        </ScrubIn>
       </section>
 
       {/* From the studio */}
       <section className="border-t border-line py-[clamp(60px,8vw,110px)]">
         <div className="shell">
-          <div className="mb-9 flex flex-wrap items-baseline justify-between gap-4">
+          <ScrubIn y={30} scale={1} className="mb-9 flex flex-wrap items-baseline justify-between gap-4">
             <h2 className="m-0 font-display text-[clamp(24px,2.8vw,38px)]">
               From the studio
             </h2>
@@ -131,20 +93,22 @@ export default function HomePage() {
             >
               Follow the artist →
             </Link>
-          </div>
+          </ScrubIn>
           <div className="grid grid-cols-[repeat(auto-fit,minmax(160px,1fr))] gap-2.5">
-            {socialGrid.map((shot) => (
-              <PhotoSlot
-                key={shot.label}
-                {...shot}
-                ratio="1 / 1"
-                hover
-                sizes="(max-width: 700px) 50vw, 16vw"
-              />
+            {socialGrid.map((shot, i) => (
+              <ScrubIn key={shot.label} y={50 + (i % 3) * 40} scale={0.88}>
+                <PhotoSlot
+                  {...shot}
+                  ratio="1 / 1"
+                  hover
+                  sizes="(max-width: 700px) 50vw, 16vw"
+                />
+              </ScrubIn>
             ))}
           </div>
         </div>
       </section>
+      </Thread>
     </>
   );
 }
