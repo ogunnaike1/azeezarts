@@ -125,7 +125,7 @@ export function ContactForm() {
       </button>
 
       <p className="mt-4 text-[12px] font-light leading-[1.7] text-muted">
-        Prefer email? Write to studio@miraadeyemi.com directly.
+        Prefer email? Write to studio@azeezarts.com directly.
       </p>
     </form>
   );

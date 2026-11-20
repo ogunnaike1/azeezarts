@@ -37,7 +37,7 @@ type CartContextValue = {
 
 const CartContext = createContext<CartContextValue | null>(null);
 
-const STORAGE_KEY = "mira-adeyemi-bag";
+const STORAGE_KEY = "azeezarts-bag";
 
 function readStoredItems(): CartItem[] {
   try {

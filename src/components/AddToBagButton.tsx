@@ -1,7 +1,7 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
+import { whatsappLink } from "@/lib/site";
 import { isPurchasable, type Artwork } from "@/lib/artworks";
 
 type Props = {
@@ -15,7 +15,6 @@ export function AddToBagButton({
   variant = "solid",
   className = "",
 }: Props) {
-  const router = useRouter();
   const { add, has, open } = useCart();
   const inBag = has(artwork.slug);
   const purchasable = isPurchasable(artwork);
@@ -40,7 +39,19 @@ export function AddToBagButton({
       className={`btn w-full ${tone} ${className}`}
       onClick={() => {
         if (!purchasable) {
-          router.push(`/contact?work=${artwork.slug}`);
+          window.open(
+            whatsappLink(
+              `Hello Azeezarts, I saw "${artwork.title}" on your website${
+                artwork.status === "Sold" ? " (sold)" : " (reserved)"
+              }. ${
+                artwork.status === "Sold"
+                  ? "Could you paint something similar for me?"
+                  : "Please add me to the waitlist."
+              }`,
+            ),
+            "_blank",
+            "noopener,noreferrer",
+          );
           return;
         }
         if (inBag) open();

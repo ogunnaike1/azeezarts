@@ -5,7 +5,7 @@ import { SelectedWorks } from "@/components/SelectedWorks";
 import { QuoteRotator } from "@/components/QuoteRotator";
 import { getFeatured } from "@/lib/artworks";
 import { PhotoSlot } from "@/components/PhotoSlot";
-import { socialGrid, studioPortrait, studioStats } from "@/lib/site";
+import { studioPortrait, studioStats } from "@/lib/site";
 
 export default function HomePage() {
   const featured = getFeatured();
@@ -80,34 +80,6 @@ export default function HomePage() {
         </ScrubIn>
       </section>
 
-      {/* From the studio */}
-      <section className="border-t border-line py-[clamp(60px,8vw,110px)]">
-        <div className="shell">
-          <ScrubIn y={30} scale={1} className="mb-9 flex flex-wrap items-baseline justify-between gap-4">
-            <h2 className="m-0 font-display text-[clamp(24px,2.8vw,38px)]">
-              From the studio
-            </h2>
-            <Link
-              href="/contact"
-              className="link-underline font-mono text-[10px] uppercase tracking-[0.26em]"
-            >
-              Follow the artist →
-            </Link>
-          </ScrubIn>
-          <div className="grid grid-cols-[repeat(auto-fit,minmax(160px,1fr))] gap-2.5">
-            {socialGrid.map((shot, i) => (
-              <ScrubIn key={shot.label} y={50 + (i % 3) * 40} scale={0.88}>
-                <PhotoSlot
-                  {...shot}
-                  ratio="1 / 1"
-                  hover
-                  sizes="(max-width: 700px) 50vw, 16vw"
-                />
-              </ScrubIn>
-            ))}
-          </div>
-        </div>
-      </section>
       </Thread>
     </>
   );

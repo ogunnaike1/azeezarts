@@ -2,36 +2,27 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useCart } from "@/context/CartContext";
 import { formatPrice } from "@/lib/artworks";
-import { useEnquiry } from "@/lib/useEnquiry";
+import { whatsappLink } from "@/lib/site";
 
 export function CartDrawer() {
-  const { items, total, isOpen, close, remove, clear } = useCart();
-  const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
-  const [checkingOut, setCheckingOut] = useState(false);
-  const { state, reference, error, submit, reset } = useEnquiry("order");
+  const { items, total, isOpen, close, remove } = useCart();
 
-  const closeDrawer = () => {
-    close();
-    // Let the exit animation finish before resetting the panel.
-    window.setTimeout(() => {
-      setCheckingOut(false);
-      reset();
-    }, 400);
-  };
+  const closeDrawer = close;
 
-  const placeOrder = async () => {
-    const ok = await submit({
-      name,
-      email,
-      works: items.map((i) => `${i.title} — ${formatPrice(i.price)}`),
-      total,
-    });
-    if (ok) clear();
+  /** The whole bag as one pre-written WhatsApp message to the studio. */
+  const orderLink = () => {
+    const lines = items.map(
+      (i, n) =>
+        `${n + 1}. ${i.title} — ${formatPrice(i.price)}\n${window.location.origin}/works/${i.slug}`,
+    );
+    return whatsappLink(
+      `Hello Azeezarts, I would like to order ${
+        items.length === 1 ? "this painting" : "these paintings"
+      }:\n\n${lines.join("\n\n")}\n\nTotal: ${formatPrice(total)}\n\nPlease let me know how to proceed.`,
+    );
   };
 
   return (
@@ -73,19 +64,7 @@ export function CartDrawer() {
             </header>
 
             <div className="flex-1 overflow-y-auto px-[clamp(20px,4vw,34px)]">
-              {state === "sent" ? (
-                <div className="flex h-full flex-col justify-center py-14">
-                  <span className="eyebrow text-accent">Enquiry received</span>
-                  <h3 className="mt-4 font-display text-[clamp(26px,3.4vw,36px)] leading-tight">
-                    Thank you — your reference is {reference}.
-                  </h3>
-                  <p className="mt-5 text-[14px] font-light leading-[1.85] text-ink-soft">
-                    Azeez replies to purchase enquiries personally, usually within
-                    two working days, with an invoice and crating timeline for
-                    your address.
-                  </p>
-                </div>
-              ) : items.length === 0 ? (
+              {items.length === 0 ? (
                 <div className="flex h-full flex-col justify-center py-14">
                   <p className="font-display text-[clamp(24px,3vw,32px)] leading-tight">
                     Your bag is empty.
@@ -148,7 +127,7 @@ export function CartDrawer() {
               )}
             </div>
 
-            {items.length > 0 && state !== "sent" && (
+            {items.length > 0 && (
               <footer className="border-t border-line px-[clamp(20px,4vw,34px)] py-6">
                 <div className="flex items-baseline justify-between">
                   <span className="micro text-muted">Total</span>
@@ -160,54 +139,18 @@ export function CartDrawer() {
                   Includes crated worldwide shipping and insurance.
                 </p>
 
-                {checkingOut ? (
-                  <form
-                    className="mt-5 grid gap-4"
-                    onSubmit={(e) => {
-                      e.preventDefault();
-                      void placeOrder();
-                    }}
-                  >
-                    <input
-                      required
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      placeholder="Your name"
-                      className="field"
-                    />
-                    <input
-                      required
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="you@email.com"
-                      className="field"
-                    />
-                    {error && <p className="text-[12px] text-accent">{error}</p>}
-                    <button
-                      type="submit"
-                      disabled={state === "sending"}
-                      className="btn btn-primary"
-                    >
-                      {state === "sending" ? "Sending…" : "Send purchase enquiry"}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setCheckingOut(false)}
-                      className="cursor-pointer font-mono text-[9.5px] uppercase tracking-[0.22em] text-muted hover:text-accent"
-                    >
-                      Back to bag
-                    </button>
-                  </form>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() => setCheckingOut(true)}
-                    className="btn btn-primary mt-5 w-full"
-                  >
-                    Reserve these works
-                  </button>
-                )}
+                <a
+                  href={orderLink()}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btn-primary mt-5 w-full"
+                >
+                  Order on WhatsApp
+                </a>
+                <p className="mt-3 text-center text-[11.5px] font-light leading-[1.7] text-muted">
+                  Opens a chat with the studio with your bag already written
+                  out. Payment and delivery are agreed in the chat.
+                </p>
               </footer>
             )}
           </motion.aside>

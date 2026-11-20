@@ -58,7 +58,7 @@ export default function AboutPage() {
       </section>
 
       <section className="band py-[clamp(60px,8vw,120px)]">
-        <div className="shell grid grid-cols-[repeat(auto-fit,minmax(180px,1fr))] gap-3.5">
+        <div className="shell grid grid-cols-2 gap-3.5 md:grid-cols-4">
           {studioShots.map((shot, i) => (
             <Reveal key={shot.label} delay={i * 0.08}>
               <PhotoSlot {...shot} sizes="(max-width: 700px) 50vw, 24vw" />

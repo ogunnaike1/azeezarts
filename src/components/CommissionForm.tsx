@@ -1,9 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { useEnquiry } from "@/lib/useEnquiry";
+import { whatsappLink } from "@/lib/site";
 
-const TYPES = ["Abstract", "Interior", "Landscape", "Portrait"];
+const TYPES = [
+  "Portrait",
+  "Gele portrait",
+  "Family / couple portrait",
+  "Landscape",
+  "Interior / scene",
+];
 const SIZES = [
   "Intimate — 24 × 30 in",
   "Standard — 36 × 48 in",
@@ -20,10 +26,8 @@ const BUDGETS = [
 const FIELD_LABEL = "micro text-muted";
 
 export function CommissionForm() {
-  const { state, reference, error, submit } = useEnquiry("commission");
   const [form, setForm] = useState({
     name: "",
-    email: "",
     type: TYPES[0],
     size: SIZES[1],
     budget: BUDGETS[0],
@@ -34,28 +38,24 @@ export function CommissionForm() {
   const set = (key: keyof typeof form) => (value: string) =>
     setForm((f) => ({ ...f, [key]: value }));
 
-  if (state === "sent") {
-    return (
-      <div className="border border-line bg-canvas p-[clamp(24px,3.4vw,44px)]">
-        <span className="eyebrow text-accent">Request received</span>
-        <h3 className="mt-4 font-display text-[clamp(24px,2.8vw,34px)] leading-tight">
-          Thank you — reference {reference}.
-        </h3>
-        <p className="mt-5 text-[14.5px] font-light leading-[1.85] text-ink-soft">
-          Azeez reads every commission request personally. You’ll hear back within two
-          working days to arrange the first conversation — there’s no fee and no
-          obligation at that stage.
-        </p>
-      </div>
-    );
-  }
-
   return (
     <form
       className="border border-line bg-canvas p-[clamp(24px,3.4vw,44px)]"
       onSubmit={(e) => {
         e.preventDefault();
-        void submit(form);
+        const message = [
+          `Hello Azeezarts, I would like to request a commission.`,
+          ``,
+          `Name: ${form.name}`,
+          `Type: ${form.type}`,
+          `Size: ${form.size}`,
+          `Budget: ${form.budget}`,
+          ...(form.timeline ? [`Timeline: ${form.timeline}`] : []),
+          ...(form.message ? [``, `What I have in mind: ${form.message}`] : []),
+          ``,
+          `I will send my reference photo(s) in this chat.`,
+        ].join("\n");
+        window.open(whatsappLink(message), "_blank", "noopener,noreferrer");
       }}
     >
       <h3 className="m-0 font-display text-[clamp(22px,2.4vw,30px)]">
@@ -70,18 +70,6 @@ export function CommissionForm() {
             value={form.name}
             onChange={(e) => set("name")(e.target.value)}
             placeholder="Your name"
-            className="field"
-          />
-        </label>
-
-        <label className="flex flex-col gap-2">
-          <span className={FIELD_LABEL}>Email</span>
-          <input
-            required
-            type="email"
-            value={form.email}
-            onChange={(e) => set("email")(e.target.value)}
-            placeholder="you@email.com"
             className="field"
           />
         </label>
@@ -150,19 +138,14 @@ export function CommissionForm() {
       <p className="mt-6 border border-dashed border-line-soft p-6 text-[13px] font-light leading-[1.7] text-muted">
         <span className="eyebrow block text-accent">Reference image</span>
         <span className="mt-2 block">
-          Have a photo of the wall or a palette you love? Reply to the
-          confirmation email and attach it — JPG or PNG, up to 10MB.
+          Have a photo of the person, the wall or a palette you love? Send it
+          in the WhatsApp chat once it opens — a clear, well-lit photo works
+          best.
         </span>
       </p>
 
-      {error && <p className="mt-4 text-[12.5px] text-accent">{error}</p>}
-
-      <button
-        type="submit"
-        disabled={state === "sending"}
-        className="btn btn-primary mt-7 w-full"
-      >
-        {state === "sending" ? "Sending…" : "Send request"}
+      <button type="submit" className="btn btn-primary mt-7 w-full">
+        Send request on WhatsApp
       </button>
     </form>
   );

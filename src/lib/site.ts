@@ -5,10 +5,22 @@ export const site = {
   artist: "Azeez",
   tagline: "Contemporary Painting",
   email: "studio@azeezarts.com",
+  /**
+   * WhatsApp number in international format, digits only (no +, spaces or
+   * leading zeros), e.g. "2348012345678". Set NEXT_PUBLIC_WHATSAPP_NUMBER, or
+   * replace the fallback below. Every "order", "enquire" and "commission"
+   * button on the site opens a chat with this number.
+   */
+  whatsapp: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "2340000000000",
   studios: ["14 Ikoyi Crescent, Lagos", "Rua da Boavista 48, Lisbon"],
   description:
     "Paintings of interiors half-dissolved by light — rooms remembered rather than seen. Originals, commissions and studio news from Azeezarts.",
 };
+
+/** A wa.me link that opens a chat with the studio, message pre-filled. */
+export function whatsappLink(message: string): string {
+  return `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(message)}`;
+}
 
 export const nav = [
   { href: "/", label: "Home", num: "01" },
@@ -23,7 +35,7 @@ export const socials = [
   { label: "Instagram", href: "https://instagram.com" },
   { label: "Facebook", href: "https://facebook.com" },
   { label: "TikTok", href: "https://tiktok.com" },
-  { label: "WhatsApp", href: "https://wa.me/0000000000" },
+  { label: "WhatsApp", href: whatsappLink("Hello Azeezarts, I would like to know more about your paintings.") },
 ] as const;
 
 /**
@@ -32,13 +44,13 @@ export const socials = [
  * right across the arc; the middle one sits at the crown.
  */
 export const heroSlugs = [
-  "the-guest-room",
-  "dry-season-field",
-  "threshold-i",
-  "afternoon-that-would-not-end",
-  "her-mothers-blue",
-  "harmattan-morning",
-  "lisbon-window-late-may",
+  "indigo-morning",
+  "silver-lashes",
+  "crimson-crown",
+  "golden-hour",
+  "sunday-companion",
+  "over-the-shoulder",
+  "field-of-light",
 ] as const;
 
 export const quotes = [
@@ -133,125 +145,60 @@ export const commissionSizes = [
   { name: "Architectural", dims: "Bespoke, up to 96 in", price: "on request" },
 ];
 
-/**
- * Photography slots.
- *
- * `src` is optional: leave it off and the slot shows a neutral field with its
- * caption, which doubles as the shot list. Drop a file into /public/studio and
- * add the path — nothing else changes.
- */
+/** A photograph slot: studio shots, the artist portrait, the social grid. */
 export type Photo = {
   label: string;
   tone: string;
   ratio?: string;
   src?: string;
   alt?: string;
-  /** Source and licence — placeholder imagery only. Drop with the file. */
-  credit?: string;
 };
 
 /** The large portrait beside the biography on /about. */
 export const artistPortrait: Photo = {
-  label: "Artist portrait",
-  ratio: "1.424 / 1",
-  tone: "#312a1f",
-  src: "/studio/portrait.jpg",
-  alt: "A painter's studio hung floor to ceiling with work",
-  credit: "William Merritt Chase - Studio Interior - Google Art Project · Public domain · Wikimedia Commons",
+  label: "Azeez in the studio",
+  ratio: "0.75 / 1",
+  tone: "#b9893f",
+  src: "/studio/artist-easel.jpg",
+  alt: "The artist at the easel, brush in hand, beside a painting of a woman in a red gele",
 };
 
-/** The 4/5 studio frame beside the studio note on the home page. */
+/** The studio frame beside the studio note on the home page. */
 export const studioPortrait: Photo = {
-  label: "Studio / artist at easel",
-  ratio: "1.698 / 1",
-  tone: "#463b32",
-  src: "/studio/easel.jpg",
-  alt: "A large studio interior, the painter at work at the centre",
-  credit: "Courbet LAtelier du peintre · Public domain · Wikimedia Commons",
+  label: "At the easel",
+  ratio: "0.75 / 1",
+  tone: "#a5762f",
+  src: "/studio/artist-portrait.jpg",
+  alt: "The artist smiling in the studio next to a painting of a woman in a red gele",
 };
 
 export const studioShots: Photo[] = [
   {
-    label: "Palette, Tuesday",
-    ratio: "2.105 / 1",
-    tone: "#6a5e42",
-    src: "/studio/palette.jpg",
-    alt: "The tools of the studio laid out on a table",
-    credit: "Jean-Baptiste Simeon Chardin - Still life with attributes of the arts - Google Art Project · Public domain · Wikimedia Commons",
+    label: "Detail — striped gele",
+    ratio: "1.308 / 1",
+    tone: "#4a6fc0",
+    src: "/studio/detail-blue-gele.jpg",
+    alt: "Close detail of a blue and white striped gele from Indigo Morning",
   },
   {
-    label: "Linen, stretched",
-    ratio: "1.297 / 1",
-    tone: "#a49376",
-    src: "/studio/linen.jpg",
-    alt: "The reverse of a stretched canvas, bare linen on its bars",
-    credit: "Cornelius Norbertus Gijsbrechts - Trompe l'oeil. The Reverse of a Framed Painting - Google Art Project · Public domain · Wikimedia Commons",
+    label: "Detail — red gele",
+    ratio: "2.059 / 1",
+    tone: "#b0122a",
+    src: "/studio/detail-red-gele.jpg",
+    alt: "Close detail of the glossy folds of a red gele from Crimson Crown",
   },
   {
-    label: "Wall of studies",
+    label: "Detail — meadow",
     ratio: "0.733 / 1",
-    tone: "#563937",
-    src: "/studio/studies-wall.jpg",
-    alt: "A studio wall crowded with plaster casts and studies",
-    credit: "1872 Menzel Atelierwand anagoria · Public domain · Wikimedia Commons",
+    tone: "#cdbf5a",
+    src: "/studio/detail-field.jpg",
+    alt: "Close detail of wildflowers in the meadow of Field of Light",
   },
   {
-    label: "North window",
-    ratio: "0.684 / 1",
-    tone: "#4e4949",
-    src: "/studio/north-window.jpg",
-    alt: "A figure at a tall window, looking out into the light",
-    credit: "Gustave Caillebotte - Jeune homme à sa fenêtre (B 32) · Public domain · Wikimedia Commons",
-  },
-];
-
-export const socialGrid: Photo[] = [
-  {
-    label: "Studio, 6am",
-    ratio: "1 / 1",
-    tone: "#403529",
-    src: "/studio/social-1.jpg",
-    alt: "A painter at the easel in early light",
-    credit: "Jan Vermeer - The Art of Painting - Google Art Project · Public domain · Wikimedia Commons",
-  },
-  {
-    label: "Glaze test",
-    ratio: "1 / 1",
-    tone: "#3d2c17",
-    src: "/studio/social-2.jpg",
-    alt: "Studio vessels and cloth on a bare table",
-    credit: "Bodegon con almirez, cántaro y caldero de cobre · Public domain · Wikimedia Commons",
-  },
-  {
-    label: "Crating day",
-    ratio: "1 / 1",
-    tone: "#928646",
-    src: "/studio/social-3.jpg",
-    alt: "A plaster figure, books and a rose on a studio table",
-    credit: "Still life with plaster torso, a rose and two novels - Vincent Van Gogh · Public domain · Wikimedia Commons",
-  },
-  {
-    label: "Lisbon light",
-    ratio: "1 / 1",
-    tone: "#8b6d68",
-    src: "/studio/social-4.jpg",
-    alt: "Fruit and cloth arranged on a table",
-    credit: "Pommes et oranges, par Paul Cézanne, Musée d'Orsay, Paris (36322958725) · Public domain · Wikimedia Commons",
-  },
-  {
-    label: "Brush repair",
-    ratio: "1 / 1",
-    tone: "#817163",
-    src: "/studio/social-5.jpg",
-    alt: "A dim patterned interior",
-    credit: "'Interior' by Édouard Vuillard, 1904, Pushkin Museum · Public domain · Wikimedia Commons",
-  },
-  {
-    label: "Install, Kó",
-    ratio: "1 / 1",
-    tone: "#5a3a28",
-    src: "/studio/social-6.jpg",
-    alt: "A quiet tiled room seen through a doorway",
-    credit: "Een moeder die het haar van haar kind reinigt, bekend als ‘Moedertaak’ Rijksmuseum SK-C-149 · Public domain · Wikimedia Commons",
+    label: "Detail — the bow",
+    ratio: "0.688 / 1",
+    tone: "#a82a2a",
+    src: "/studio/detail-bow.jpg",
+    alt: "Close detail of the knotted red gele in Silver Lashes",
   },
 ];

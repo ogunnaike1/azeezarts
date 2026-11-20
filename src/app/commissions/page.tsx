@@ -2,13 +2,17 @@ import type { Metadata } from "next";
 import { PageHeader } from "@/components/PageHeader";
 import { Reveal } from "@/components/Reveal";
 import { CommissionForm } from "@/components/CommissionForm";
-import { commissionSizes, commissionSteps } from "@/lib/site";
+import { Plate } from "@/components/Plate";
+import { artworks, plateAlt, primaryImage } from "@/lib/artworks";
+import { whatsappLink, commissionSizes, commissionSteps } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Commissions",
   description:
     "Commission an original painting from Azeez. Four stages from conversation to crate, with sizes, timelines and starting prices.",
 };
+
+const commissioned = artworks.filter((a) => a.status === "Sold");
 
 export default function CommissionsPage() {
   return (
@@ -48,6 +52,28 @@ export default function CommissionsPage() {
         </div>
       </section>
 
+      <section className="shell pb-[clamp(60px,8vw,120px)]">
+        <h2 className="m-0 font-display text-[clamp(26px,3.2vw,42px)] tracking-[-0.01em]">
+          Recent commissions
+        </h2>
+        <div className="mt-8 grid grid-cols-2 md:grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-[clamp(20px,2.6vw,40px)]">
+          {commissioned.map((work) => (
+            <div key={work.slug}>
+              <Plate
+                tone={work.tone}
+                src={primaryImage(work)?.url}
+                alt={plateAlt(work)}
+                ratio={work.ratio}
+              />
+              <p className="mt-3 font-display text-[19px]">{work.title}</p>
+              <p className="mt-1 text-[11.5px] font-light tracking-[0.05em] text-muted">
+                {work.medium}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
       <section className="band py-[clamp(60px,8vw,120px)]">
         <div className="shell grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] items-start gap-[clamp(34px,5vw,84px)]">
           <div>
@@ -78,7 +104,19 @@ export default function CommissionsPage() {
             </p>
           </div>
 
-          <CommissionForm />
+          <div>
+            <CommissionForm />
+            <a
+              href={whatsappLink(
+                "Hello Azeezarts, I would like to commission a painting.",
+              )}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-outline mt-4 w-full"
+            >
+              Or just start a WhatsApp chat
+            </a>
+          </div>
         </div>
       </section>
     </>

@@ -66,6 +66,8 @@ function useMetrics() {
   const w = useMotionValue(190);
   const fx = useMotionValue(1);
   const fy = useMotionValue(1);
+  // Phones have no room to hang paintings around the statement.
+  const compact = useMotionValue(0);
 
   useEffect(() => {
     const update = () => {
@@ -73,15 +75,16 @@ function useMetrics() {
       const vh = window.innerHeight;
       const cw = Math.min(250, Math.max(92, Math.min(vw * 0.17, vh * 0.21)));
       w.set(cw);
+      compact.set(vw < 768 ? 1 : 0);
       fx.set(Math.min(1, vw / cw / 7.4));
       fy.set(Math.min(1, Math.max(vh, 700) / cw / 4.76));
     };
     update();
     window.addEventListener("resize", update);
     return () => window.removeEventListener("resize", update);
-  }, [w, fx, fy]);
+  }, [w, fx, fy, compact]);
 
-  return { w, fx, fy };
+  return { w, fx, fy, compact };
 }
 
 /**
@@ -247,7 +250,7 @@ function Card({
   const arc = ARC[reach];
   const frame = FRAMES[index];
   const image = primaryImage(work);
-  const { w, fx, fy } = metrics;
+  const { w, fx, fy, compact } = metrics;
 
   // Two overlapping moves. First the arc opens out (`open`); then each card
   // travels from its place on the arc to its frame (`land`).
@@ -293,6 +296,13 @@ function Card({
     return lerp(r, 6, m);
   });
   const fade = useTransform(mat, (m) => 1 - m);
+  // On phones the cards clear away before the statement reads in.
+  const presence = useTransform(() => {
+    // Read both up front so the transform tracks them whatever the branch.
+    const isCompact = compact.get();
+    const p = progress.get();
+    return reduced || !isCompact ? 1 : 1 - seg(p, 0.3, 0.48);
+  });
 
   return (
     <motion.div
@@ -301,6 +311,7 @@ function Card({
         y,
         rotate,
         scale,
+        opacity: presence,
         left: `calc(50% + var(--w) * ${(side * arc.x - 0.5).toFixed(2)})`,
         top: `calc(var(--w) * ${arc.y} + var(--lift))`,
       }}

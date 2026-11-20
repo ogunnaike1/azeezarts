@@ -10,6 +10,7 @@ import {
   getArtwork,
   getRelated,
 } from "@/lib/artworks";
+import { whatsappLink } from "@/lib/site";
 
 type Params = { params: Promise<{ slug: string }> };
 
@@ -81,12 +82,16 @@ export default async function ArtworkPage({ params }: Params) {
 
             <div className="mt-10 flex max-w-[400px] flex-col gap-3">
               <AddToBagButton artwork={artwork} />
-              <Link
-                href={`/contact?work=${artwork.slug}`}
+              <a
+                href={whatsappLink(
+                  `Hello Azeezarts, I would like to know more about "${artwork.title}" (${artwork.year}, ${artwork.dims}).`,
+                )}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="btn btn-outline w-full"
               >
-                Inquire about this work
-              </Link>
+                Chat about this work on WhatsApp
+              </a>
               <Link
                 href="/commissions"
                 className="btn btn-quiet w-full"
