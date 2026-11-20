@@ -29,6 +29,7 @@ export function SelectedWorks({ works }: { works: Artwork[] }) {
               >
                 {image && (
                   <Image
+            quality={90}
                     src={image.url}
                     alt={plateAlt(work)}
                     fill

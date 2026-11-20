@@ -339,6 +339,7 @@ function Card({
           >
             {image && (
               <Image
+            quality={90}
                 src={image.url}
                 alt={plateAlt(work)}
                 fill

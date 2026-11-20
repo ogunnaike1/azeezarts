@@ -52,6 +52,7 @@ export function Plate({
       >
         {src && (
           <Image
+            quality={90}
             src={src}
             alt={alt ?? ""}
             fill

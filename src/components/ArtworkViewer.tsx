@@ -69,6 +69,7 @@ export function ArtworkViewer({ artwork }: { artwork: Artwork }) {
           >
             {primary && (
               <Image
+            quality={90}
                 src={primary.url}
                 alt={plateAlt(artwork)}
                 fill
@@ -95,6 +96,7 @@ export function ArtworkViewer({ artwork }: { artwork: Artwork }) {
             >
               {shot ? (
                 <Image
+            quality={90}
                   src={shot.url}
                   alt={shot.alt}
                   fill
@@ -106,6 +108,7 @@ export function ArtworkViewer({ artwork }: { artwork: Artwork }) {
                    and failing that the pigment on its own. */
                 primary && (
                   <Image
+            quality={90}
                     src={primary.url}
                     alt={`${artwork.title} — ${view.label.toLowerCase()}`}
                     fill

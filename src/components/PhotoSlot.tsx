@@ -38,6 +38,7 @@ export function PhotoSlot({
     >
       {src && (
         <Image
+            quality={90}
           src={src}
           alt={alt ?? label}
           fill

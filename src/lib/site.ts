@@ -182,7 +182,7 @@ export const studioShots: Photo[] = [
   },
   {
     label: "Detail — red gele",
-    ratio: "2.059 / 1",
+    ratio: "2.097 / 1",
     tone: "#b0122a",
     src: "/studio/detail-red-gele.jpg",
     alt: "Close detail of the glossy folds of a red gele from Crimson Crown",

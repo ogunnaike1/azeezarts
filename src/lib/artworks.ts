@@ -84,7 +84,7 @@ export const artworks: Artwork[] = [
     category: "Portrait",
     series: "Gele",
     status: "Available",
-    ratio: "0.677 / 1",
+    ratio: "0.676 / 1",
     tone: "#5f6670",
     pigment: "Cadmium yellow",
     images: [
@@ -108,7 +108,7 @@ export const artworks: Artwork[] = [
     category: "Portrait",
     series: "Gele",
     status: "Available",
-    ratio: "0.8 / 1",
+    ratio: "0.815 / 1",
     tone: "#1f7f93",
     pigment: "Alizarin crimson",
     images: [
